@@ -1,0 +1,74 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/auth/login"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Criar conta</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="bg-white">
+  <div class="min-h-full flex flex-col px-6 py-8">
+    <div class="mb-8 text-center">
+      <h1 class="text-3xl font-bold text-slate-900 mb-2">Comece agora</h1>
+      <p class="text-slate-500 text-base">Crie sua conta para organizar tarefas.</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-5 flex-1">
+      <div class="space-y-2">
+        <label class="block text-sm font-medium text-slate-700 pl-1">Nome</label>
+        <ion-item lines="none" class="border-2 border-slate-200 rounded-xl">
+          <ion-input type="text" formControlName="name" autocomplete="name" required></ion-input>
+        </ion-item>
+        <div class="text-red-500 text-xs pl-1 min-h-[16px]" *ngIf="form.get('name')?.touched && form.get('name')?.invalid">
+          Informe seu nome
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <label class="block text-sm font-medium text-slate-700 pl-1">Email</label>
+        <ion-item lines="none" class="border-2 border-slate-200 rounded-xl">
+          <ion-input type="email" formControlName="email" autocomplete="email" required></ion-input>
+        </ion-item>
+        <div class="text-red-500 text-xs pl-1 min-h-[16px]" *ngIf="form.get('email')?.touched && form.get('email')?.invalid">
+          Email inválido
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <label class="block text-sm font-medium text-slate-700 pl-1">Senha</label>
+        <ion-item lines="none" class="border-2 border-slate-200 rounded-xl">
+          <ion-input type="password" formControlName="password" autocomplete="new-password" required></ion-input>
+        </ion-item>
+        <div class="text-red-500 text-xs pl-1 min-h-[16px]" *ngIf="form.get('password')?.touched && form.get('password')?.invalid">
+          Mínimo 6 caracteres
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <label class="block text-sm font-medium text-slate-700 pl-1">Confirmar senha</label>
+        <ion-item lines="none" class="border-2 border-slate-200 rounded-xl">
+          <ion-input type="password" formControlName="confirmPassword" autocomplete="new-password" required></ion-input>
+        </ion-item>
+        <div class="text-red-500 text-xs pl-1 min-h-[16px]" *ngIf="form.hasError('passwordMismatch') && form.get('confirmPassword')?.touched">
+          As senhas precisam coincidir
+        </div>
+      </div>
+
+      <ion-button
+        expand="block"
+        type="submit"
+        [disabled]="form.invalid || isSubmitting"
+        class="mt-4 h-14 font-semibold text-base shadow-lg"
+        style="
+          --background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+          --background-hover: #d97706;
+          --background-activated: #b45309;
+          --border-radius: 12px;
+        "
+      >
+        {{ isSubmitting ? 'Criando...' : 'Criar conta' }}
+      </ion-button>
+    </form>
+  </div>
+</ion-content>
