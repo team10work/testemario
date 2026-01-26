@@ -12,6 +12,7 @@ import {
   IonInput,
   IonButton,
 } from '@ionic/angular/standalone';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
@@ -33,7 +34,11 @@ export class LoginPage {
   form: FormGroup;
   isSubmitting = false;
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private navCtrl: NavController,
+  ) {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -45,7 +50,8 @@ export class LoginPage {
     this.isSubmitting = true;
     setTimeout(() => {
       this.isSubmitting = false;
-      this.router.navigateByUrl('/');
+      // Use navigateRoot so Tabs becomes the new navigation root and overlay issues disappear
+      this.navCtrl.navigateRoot('/tabs/search');
     }, 800);
   }
 
@@ -54,7 +60,6 @@ export class LoginPage {
   }
 
   goRegister(): void {
-    console.log('navegar para registro');
     this.router.navigateByUrl('/auth/register');
   }
 }
