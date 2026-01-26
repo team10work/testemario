@@ -31,23 +31,19 @@ export const routes: Routes = [
 
   {
     path: 'tabs',
-    loadComponent: () =>
-      import('./tabs/tabs.page').then(m => m.TabsPage),
+    loadComponent: () => import('./tabs/tabs.page').then(m => m.TabsPage),
     children: [
       {
         path: 'search',
-        loadComponent: () =>
-          import('./tabs/search/search.page').then(m => m.SearchPage),
+        loadComponent: () => import('./tabs/search/search.page').then(m => m.SearchPage),
       },
       {
         path: 'schedule',
-        loadComponent: () =>
-          import('./tabs/schedule/schedule.page').then(m => m.SchedulePage),
+        loadComponent: () => import('./tabs/schedule/schedule.page').then(m => m.SchedulePage),
       },
       {
         path: 'profile',
-        loadComponent: () =>
-          import('./tabs/profile/profile.page').then(m => m.ProfilePage),
+        loadComponent: () => import('./tabs/profile/profile.page').then(m => m.ProfilePage),
       },
       {
         path: '',

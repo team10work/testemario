@@ -48,3 +48,16 @@ ion-button::part(native) {
   text-transform: none;
   letter-spacing: 0;
 }
+
+/* Global styling for bottom-sheet feedback modal */
+ion-modal.feedback-modal {
+  --backdrop-opacity: 0.35;
+  align-items: flex-end;
+}
+
+ion-modal.feedback-modal::part(content) {
+  border-radius: 18px 18px 0 0;
+  overflow: hidden;
+  padding: 0;
+  background: #fff;
+}

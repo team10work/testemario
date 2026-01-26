@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import {
   IonHeader,
   IonToolbar,
@@ -13,6 +12,9 @@ import {
   IonButton,
 } from '@ionic/angular/standalone';
 import { NavController } from '@ionic/angular';
+import { finalize } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
+import { FeedbackModalService } from '../../../shared/components/feedback-modal/feedback-modal.service';
 
 @Component({
   selector: 'app-login',
@@ -38,6 +40,8 @@ export class LoginPage {
     private fb: FormBuilder,
     private router: Router,
     private navCtrl: NavController,
+    private authService: AuthService,
+    private feedbackModal: FeedbackModalService,
   ) {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -48,11 +52,25 @@ export class LoginPage {
   submit(): void {
     if (this.form.invalid) return;
     this.isSubmitting = true;
-    setTimeout(() => {
-      this.isSubmitting = false;
-      // Use navigateRoot so Tabs becomes the new navigation root and overlay issues disappear
-      this.navCtrl.navigateRoot('/tabs/search');
-    }, 800);
+
+    this.authService
+      .login(this.form.value)
+      .pipe(finalize(() => (this.isSubmitting = false)))
+      .subscribe({
+        next: () => this.navCtrl.navigateRoot('/tabs/search'),
+        error: (err) => {
+          this.form.setErrors({ auth: true });
+          const backendMessage = Array.isArray(err?.error?.message)
+            ? err.error.message.join(' ')
+            : err?.error?.message || 'Não foi possível entrar. Tente novamente.';
+
+          this.feedbackModal.present({
+            title: 'Erro',
+            message: backendMessage,
+            actionLabel: 'Entendi',
+          });
+        },
+      });
   }
 
   goForgotPassword(): void {

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import {
   IonHeader,
   IonToolbar,
@@ -13,6 +13,9 @@ import {
   IonInput,
   IonButton,
 } from '@ionic/angular/standalone';
+import { finalize } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
+import { FeedbackModalService } from '../../../shared/components/feedback-modal/feedback-modal.service';
 
 @Component({
   selector: 'app-register',
@@ -36,7 +39,12 @@ export class RegisterPage {
   form: FormGroup;
   isSubmitting = false;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private authService: AuthService,
+    private feedbackModal: FeedbackModalService,
+  ) {
     this.form = this.fb.group(
       {
         name: ['', [Validators.required, Validators.minLength(2)]],
@@ -44,7 +52,7 @@ export class RegisterPage {
         password: ['', [Validators.required, Validators.minLength(6)]],
         confirmPassword: ['', [Validators.required]],
       },
-      { validators: this.matchPasswords }
+      { validators: this.matchPasswords },
     );
   }
 
@@ -57,8 +65,35 @@ export class RegisterPage {
   submit(): void {
     if (this.form.invalid) return;
     this.isSubmitting = true;
-    setTimeout(() => {
-      this.isSubmitting = false;
-    }, 800);
+    const { name, email, password } = this.form.value;
+
+    this.authService
+      .register({ name, email, password })
+      .pipe(finalize(() => (this.isSubmitting = false)))
+      .subscribe({
+        next: () => {
+          this.form.reset();
+          this.feedbackModal
+            .present({
+              title: 'Conta criada com sucesso',
+              message: 'Agora é só entrar com seu e-mail e senha.',
+              type: 'success',
+              actionLabel: 'Ir para login',
+            })
+            .then((modal) => modal.onDidDismiss().then(() => this.router.navigateByUrl('/auth/login')));
+        },
+        error: (err) => {
+          this.form.setErrors({ register: true });
+          const backendMessage = Array.isArray(err?.error?.message)
+            ? err.error.message.join(' ')
+            : err?.error?.message || 'Não foi possível cadastrar. Tente novamente.';
+
+          this.feedbackModal.present({
+            title: 'Erro',
+            message: backendMessage,
+            actionLabel: 'Entendi',
+          });
+        },
+      });
   }
 }
