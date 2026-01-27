@@ -16,6 +16,8 @@ import { addIcons } from 'ionicons';
 import {
   addOutline,
   chevronForwardOutline,
+  chevronDownOutline,
+  calendarOutline,
   trashOutline,
 } from 'ionicons/icons';
 
@@ -65,21 +67,85 @@ export class SchedulePage {
   readonly modalOpen = signal(false);
   readonly editing = signal<Activity | null>(null);
   readonly form = signal<FormState>(this.buildBlankForm(this.today));
-  readonly activePicker = signal<'startDate' | 'startTime' | 'endDate' | 'endTime' | null>(null);
+  readonly activePicker = signal<
+    'startDate' | 'startTime' | 'endDate' | 'endTime' | null
+  >(null);
+  readonly monthPickerOpen = signal(false);
   readonly activities = signal<Activity[]>([]);
 
   readonly monthLabel = computed(() =>
-    new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(
-      new Date(this.currentYear(), this.currentMonth(), 1)
-    )
+    new Intl.DateTimeFormat('pt-BR', { month: 'long' }).format(
+      new Date(this.currentYear(), this.currentMonth(), 1),
+    ),
   );
 
+  readonly monthYearLabel = computed(() => {
+    const month = new Intl.DateTimeFormat('pt-BR', { month: 'long' }).format(
+      new Date(this.currentYear(), this.currentMonth(), 1),
+    );
+    const year = this.currentYear().toString().slice(-2);
+    return `${month.charAt(0).toUpperCase() + month.slice(1)} ${year}`;
+  });
+
+  readonly groupedActivities = computed(() => {
+    const year = this.currentYear();
+    const month = this.currentMonth();
+
+    const filtered = this.activities().filter((a) => {
+      const d = new Date(a.date);
+      return d.getFullYear() === year && d.getMonth() === month;
+    });
+
+    filtered.sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      if (dateA.getTime() !== dateB.getTime()) {
+        return dateA.getTime() - dateB.getTime();
+      }
+      return a.start.localeCompare(b.start);
+    });
+
+    const groups: {
+      date: string;
+      dayLabel: string;
+      dayNumber: number;
+      activities: Activity[];
+    }[] = [];
+
+    for (const activity of filtered) {
+      const existing = groups.find((g) => g.date === activity.date);
+      if (existing) {
+        existing.activities.push(activity);
+      } else {
+        const d = new Date(activity.date + 'T00:00:00');
+        const dayLabel = new Intl.DateTimeFormat('pt-BR', { weekday: 'short' })
+          .format(d)
+          .toUpperCase()
+          .replace('.', '');
+        groups.push({
+          date: activity.date,
+          dayLabel,
+          dayNumber: d.getDate(),
+          activities: [activity],
+        });
+      }
+    }
+
+    return groups;
+  });
+
   readonly calendar = computed(() =>
-    this.buildCalendar(this.currentYear(), this.currentMonth())
+    this.buildCalendar(this.currentYear(), this.currentMonth()),
   );
 
   constructor() {
-    addIcons({ addOutline, chevronForwardOutline, trashOutline });
+    addIcons({
+      addOutline,
+      chevronForwardOutline,
+      chevronDownOutline,
+      calendarOutline,
+      trashOutline,
+    });
   }
 
   prevMonth(): void {
@@ -98,6 +164,52 @@ export class SchedulePage {
     const today = new Date();
     this.currentYear.set(today.getFullYear());
     this.currentMonth.set(today.getMonth());
+  }
+
+  openMonthPicker(): void {
+    this.monthPickerOpen.set(true);
+  }
+
+  closeMonthPicker(): void {
+    this.monthPickerOpen.set(false);
+  }
+
+  onMonthPickerChange(event: CustomEvent): void {
+    const value = (event.detail as { value?: string | null }).value;
+    if (!value) return;
+
+    // Handle both ISO format and YYYY-MM format
+    let year: number;
+    let month: number;
+
+    if (value.includes('T')) {
+      // Full ISO format
+      const d = new Date(value);
+      year = d.getFullYear();
+      month = d.getMonth();
+    } else if (value.length === 7) {
+      // YYYY-MM format
+      const [y, m] = value.split('-').map(Number);
+      year = y;
+      month = m - 1; // months are 0-indexed
+    } else {
+      // Fallback
+      const d = new Date(value);
+      year = d.getFullYear();
+      month = d.getMonth();
+    }
+
+    this.currentYear.set(year);
+    this.currentMonth.set(month);
+  }
+
+  confirmMonthPicker(): void {
+    this.monthPickerOpen.set(false);
+  }
+
+  getMonthPickerValue(): string {
+    const month = (this.currentMonth() + 1).toString().padStart(2, '0');
+    return `${this.currentYear()}-${month}`;
   }
 
   openCreate(date?: Date): void {
@@ -167,10 +279,14 @@ export class SchedulePage {
     } else if (type === 'endDate') {
       this.updateForm('endDate', value.slice(0, 10));
     } else if (type === 'startTime') {
-      const timeStr = value.includes('T') ? value.split('T')[1].slice(0, 5) : value;
+      const timeStr = value.includes('T')
+        ? value.split('T')[1].slice(0, 5)
+        : value;
       this.updateForm('start', timeStr);
     } else if (type === 'endTime') {
-      const timeStr = value.includes('T') ? value.split('T')[1].slice(0, 5) : value;
+      const timeStr = value.includes('T')
+        ? value.split('T')[1].slice(0, 5)
+        : value;
       this.updateForm('end', timeStr);
     }
   }
@@ -207,7 +323,7 @@ export class SchedulePage {
 
     if (this.editing()) {
       this.activities.update((list) =>
-        list.map((item) => (item.id === payload.id ? payload : item))
+        list.map((item) => (item.id === payload.id ? payload : item)),
       );
     } else {
       this.activities.update((list) => [...list, payload]);
@@ -221,7 +337,7 @@ export class SchedulePage {
     if (!editing) return;
 
     this.activities.update((list) =>
-      list.filter((item) => item.id !== editing.id)
+      list.filter((item) => item.id !== editing.id),
     );
 
     this.modalOpen.set(false);
@@ -254,7 +370,7 @@ export class SchedulePage {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const weekFromNow = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
-    
+
     return this.activities().filter((a) => {
       const d = new Date(a.date);
       d.setHours(0, 0, 0, 0);
@@ -265,7 +381,7 @@ export class SchedulePage {
   getUpcomingEvents(): number {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
+
     return this.activities().filter((a) => {
       const d = new Date(a.date);
       d.setHours(0, 0, 0, 0);
@@ -276,7 +392,7 @@ export class SchedulePage {
   getCompletedEvents(): number {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
+
     return this.activities().filter((a) => {
       const d = new Date(a.date);
       d.setHours(0, 0, 0, 0);

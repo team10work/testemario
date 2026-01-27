@@ -45,3 +45,12 @@ ion-datetime {
   --wheel-fade-background-rgb: 255, 255, 255;
 }
 
+/* Force white background on schedule page */
+app-schedule ion-content {
+  --background: #ffffff;
+}
+
+app-schedule ion-content::part(scroll) {
+  background: #ffffff;
+}
+
