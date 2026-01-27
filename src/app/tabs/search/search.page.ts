@@ -3,9 +3,6 @@ import { CommonModule } from '@angular/common';
 import {
   IonContent,
   IonIcon,
-  IonInput,
-  IonChip,
-  IonLabel,
 } from '@ionic/angular/standalone';
 
 import {
@@ -35,9 +32,6 @@ import { addIcons } from 'ionicons';
     CommonModule,
     IonContent,
     IonIcon,
-    IonInput,
-    IonChip,
-    IonLabel,
   ],
 })
 export class SearchPage {

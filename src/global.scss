@@ -9,55 +9,39 @@
  * https://ionicframework.com/docs/layout/global-stylesheets
  */
 
-/* Core CSS required for Ionic components to work properly */
-@import "@ionic/angular/css/core.css";
+/* Tailwind CSS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* Basic CSS for apps built with Ionic */
-@import "@ionic/angular/css/normalize.css";
-@import "@ionic/angular/css/structure.css";
-@import "@ionic/angular/css/typography.css";
-@import "@ionic/angular/css/display.css";
-
-/* Optional CSS utils that can be commented out */
-@import "@ionic/angular/css/padding.css";
-@import "@ionic/angular/css/float-elements.css";
-@import "@ionic/angular/css/text-alignment.css";
-@import "@ionic/angular/css/text-transformation.css";
-@import "@ionic/angular/css/flex-utils.css";
-
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
-
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
-
-
-ion-item {
-  --background: transparent;
-  --padding-start: 16px;
-  --inner-padding-end: 16px;
-  --min-height: 52px;
+/* Custom Animations */
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
-ion-button::part(native) {
-  text-transform: none;
-  letter-spacing: 0;
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
 }
 
-/* Global styling for bottom-sheet feedback modal */
-ion-modal.feedback-modal {
-  --backdrop-opacity: 0.35;
-  align-items: flex-end;
+/* Safe Area */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
-ion-modal.feedback-modal::part(content) {
-  border-radius: 18px 18px 0 0;
-  overflow: hidden;
-  padding: 0;
-  background: #fff;
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
 }
+
+/* Custom Ionic Datetime styling */
+ion-datetime {
+  --background: white;
+  --wheel-fade-background-rgb: 255, 255, 255;
+}
+
