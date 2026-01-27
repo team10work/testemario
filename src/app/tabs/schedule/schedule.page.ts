@@ -71,7 +71,44 @@ export class SchedulePage {
     'startDate' | 'startTime' | 'endDate' | 'endTime' | null
   >(null);
   readonly monthPickerOpen = signal(false);
-  readonly activities = signal<Activity[]>([]);
+  readonly activities = signal<Activity[]>([
+    {
+      id: '1',
+      title: 'Reunião com cliente',
+      date: '2026-01-27',
+      start: '09:00',
+      end: '10:30',
+      endDate: '2026-01-27',
+      description: '',
+    },
+    {
+      id: '2',
+      title: 'Consulta médica',
+      date: '2026-01-27',
+      start: '14:00',
+      end: '15:00',
+      endDate: '2026-01-27',
+      description: '',
+    },
+    {
+      id: '3',
+      title: 'Almoço de negócios',
+      date: '2026-01-28',
+      start: '12:00',
+      end: '14:00',
+      endDate: '2026-01-28',
+      description: '',
+    },
+    {
+      id: '4',
+      title: 'Viagem São Paulo',
+      date: '2026-01-30',
+      start: '08:00',
+      end: '18:00',
+      endDate: '2026-01-31',
+      description: '',
+    },
+  ]);
 
   readonly monthLabel = computed(() =>
     new Intl.DateTimeFormat('pt-BR', { month: 'long' }).format(

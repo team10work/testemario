@@ -1,3 +1,151 @@
-<ion-content [fullscreen]="true" [scrollY]="false" forceOverscroll="false" class="bg-[#f7f7f8]">
+<ion-content
+  fullscreen
+  forceOverscroll="false"
+  [scrollY]="true"
+  class="bg-[#f7f7f8] ion-no-padding"
+>
+  <div
+    class="max-w-xl mx-auto px-4 pt-6 pb-24 space-y-8"
+    style="padding-top: calc(env(safe-area-inset-top) + 12px)"
+  >
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-3xl font-bold text-gray-900">Profissional</h1>
+      <button
+        type="button"
+        class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100"
+      >
+        <i class="fa-solid fa-gear text-gray-600 text-lg"></i>
+      </button>
+    </div>
 
+    <div class="flex items-center gap-4 mb-6">
+      <div
+        class="w-14 h-14 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0"
+      >
+        <i class="fa-solid fa-user text-gray-400 text-xl"></i>
+      </div>
+      <div class="flex-1 min-w-0">
+        <h2 class="text-lg font-semibold text-gray-900 truncate">
+          {{ profile().name }}
+        </h2>
+        <p class="text-sm text-gray-500">{{ profile().profession }}</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <button type="button" class="w-8 h-8 flex items-center justify-center">
+          <i class="fa-solid fa-pencil text-gray-400 text-lg"></i>
+        </button>
+        <button type="button" class="w-8 h-8 flex items-center justify-center">
+          <i class="fa-solid fa-paper-plane text-gray-400 text-lg"></i>
+        </button>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      class="w-full bg-white rounded-2xl p-4 mb-4 text-left active:bg-gray-50 transition-colors"
+    >
+      <div class="flex items-center justify-between">
+        <div class="flex-1">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-sm text-gray-500">Saldo disponível</span>
+            <button
+              type="button"
+              (click)="toggleBalance(); $event.stopPropagation()"
+            >
+              <i
+                [class]="showBalance() ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'"
+                class="text-gray-400 text-sm"
+              ></i>
+            </button>
+          </div>
+          <div class="text-3xl font-bold text-gray-900 mb-1">
+            @if (showBalance()) { {{ formatCurrency(balance()) }} } @else {
+            <span class="tracking-widest">••••••</span>
+            }
+          </div>
+          <p class="text-sm text-gray-400">
+            @if (showBalance()) { {{ formatCurrency(pendingBalance()) }} a
+            receber } @else {
+            <span class="tracking-widest">••••••</span> a receber }
+          </p>
+        </div>
+        <i class="fa-solid fa-chevron-right text-gray-300 text-xl"></i>
+      </div>
+    </button>
+
+    <div class="grid grid-cols-2 gap-3 mb-6">
+      <button
+        type="button"
+        class="bg-white rounded-2xl p-4 text-left active:bg-gray-50 transition-colors"
+      >
+        <div
+          class="w-10 h-10 rounded-full bg-cyan-50 flex items-center justify-center mb-3"
+        >
+          <i class="fa-solid fa-location-arrow text-cyan-700 text-lg"></i>
+        </div>
+        <span class="text-gray-600 font-medium">Atendimentos</span>
+      </button>
+      <button
+        type="button"
+        class="bg-white rounded-2xl p-4 text-left active:bg-gray-50 transition-colors"
+      >
+        <div
+          class="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center mb-3"
+        >
+          <i class="fa-solid fa-circle-notch text-orange-400 text-lg"></i>
+        </div>
+        <span class="text-gray-600 font-medium">Assinaturas</span>
+      </button>
+    </div>
+
+    <div class="mb-6">
+      <button type="button" class="flex items-center gap-1 mb-3">
+        <h3 class="text-xl font-bold text-gray-900">Serviços</h3>
+        <i class="fa-solid fa-chevron-right text-gray-400 text-sm"></i>
+      </button>
+
+      <div class="grid grid-cols-2 gap-3">
+        @for (service of services(); track service.id) {
+        <button
+          type="button"
+          class="bg-white rounded-2xl p-4 text-left active:bg-gray-50 transition-colors"
+        >
+          <div class="flex items-center gap-2 mb-1">
+            <i class="fa-solid fa-location-arrow text-cyan-700 text-sm"></i>
+            <span class="font-semibold text-gray-900">{{ service.name }}</span>
+          </div>
+          <div class="flex items-center gap-1 text-gray-500 text-sm mb-2">
+            <i class="fa-solid fa-tv text-xs"></i>
+            <span
+              >{{ service.type === 'remote' ? 'Remoto' : 'Presencial' }}</span
+            >
+          </div>
+          <div class="text-xl font-bold text-gray-900">
+            {{ formatCurrency(service.price) }}
+          </div>
+        </button>
+        }
+
+        <button
+          type="button"
+          class="bg-gray-100 rounded-2xl p-4 flex items-center justify-center active:bg-gray-200 transition-colors min-h-[120px]"
+        >
+          <span class="text-gray-600 font-medium">Ver todos</span>
+        </button>
+      </div>
+    </div>
+
+    <div>
+      <h3 class="text-xl font-bold text-gray-900 mb-3">Avaliações</h3>
+      @if (reviewCount() === 0) {
+      <p class="text-gray-500">Você ainda não recebeu avaliações.</p>
+      } @else {
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-star text-yellow-500 text-lg"></i>
+        <span class="text-lg font-semibold text-gray-900">{{ rating() }}</span>
+        <span class="text-gray-500">({{ reviewCount() }} avaliações)</span>
+      </div>
+      }
+    </div>
+  </div>
 </ion-content>
