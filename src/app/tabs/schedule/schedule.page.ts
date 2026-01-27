@@ -215,22 +215,18 @@ export class SchedulePage {
     const value = (event.detail as { value?: string | null }).value;
     if (!value) return;
 
-    // Handle both ISO format and YYYY-MM format
     let year: number;
     let month: number;
 
     if (value.includes('T')) {
-      // Full ISO format
       const d = new Date(value);
       year = d.getFullYear();
       month = d.getMonth();
     } else if (value.length === 7) {
-      // YYYY-MM format
       const [y, m] = value.split('-').map(Number);
       year = y;
-      month = m - 1; // months are 0-indexed
+      month = m - 1;
     } else {
-      // Fallback
       const d = new Date(value);
       year = d.getFullYear();
       month = d.getMonth();

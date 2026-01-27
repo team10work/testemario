@@ -1,0 +1,168 @@
+<ion-content
+  fullscreen
+  forceOverscroll="false"
+  [scrollY]="true"
+  class="bg-[#f5f5f5] ion-no-padding"
+>
+  <div class="min-h-full">
+    <!-- Header -->
+    <div
+      class="flex items-center justify-between px-4 py-3 bg-white"
+      style="padding-top: calc(env(safe-area-inset-top) + 12px)"
+    >
+      <button
+        type="button"
+        (click)="goBack()"
+        class="w-10 h-10 flex items-center justify-center"
+      >
+        <i class="fa-solid fa-chevron-left text-orange-500 text-lg"></i>
+      </button>
+      <span class="text-base font-semibold text-gray-900">Editar serviço</span>
+      <button
+        type="button"
+        (click)="save()"
+        class="text-gray-400 font-medium text-base"
+      >
+        Salvar
+      </button>
+    </div>
+
+    <!-- Main Fields Section -->
+    <div class="bg-white rounded-2xl mx-4 mt-4 overflow-hidden shadow-sm">
+      <!-- Nome do serviço -->
+      <button type="button" (click)="editName()" class="w-full flex items-center justify-between px-4 py-4 border-b border-gray-100 active:bg-gray-50">
+        <span class="text-gray-900 font-medium">Nome do serviço</span>
+        <div class="flex items-center gap-2">
+          <span class="text-gray-400">{{ service().name }}</span>
+          <i class="fa-solid fa-chevron-right text-gray-300 text-sm"></i>
+        </div>
+      </button>
+
+      <!-- Tipo -->
+      <button type="button" (click)="editType()" class="w-full flex items-center justify-between px-4 py-4 border-b border-gray-100 active:bg-gray-50">
+        <span class="text-gray-900 font-medium">Tipo</span>
+        <div class="flex items-center gap-2">
+          <span class="text-gray-400">{{ service().type }}</span>
+          <i class="fa-solid fa-chevron-up-down text-gray-300 text-sm"></i>
+        </div>
+      </button>
+
+      <!-- Áreas de atuação -->
+      <button type="button" (click)="editAreas()" class="w-full flex items-center justify-between px-4 py-4 border-b border-gray-100 active:bg-gray-50">
+        <span class="text-gray-900 font-medium">Áreas de atuação</span>
+        <div class="flex items-center gap-2">
+          <span class="text-gray-400">{{ service().areas }} área</span>
+          <i class="fa-solid fa-chevron-right text-gray-300 text-sm"></i>
+        </div>
+      </button>
+
+      <!-- O que o serviço oferece -->
+      <button type="button" (click)="editOffers()" class="w-full flex items-center justify-between px-4 py-4 border-b border-gray-100 active:bg-gray-50">
+        <span class="text-gray-900 font-medium">O que o serviço oferece?</span>
+        <div class="flex items-center gap-2">
+          <span class="text-gray-400">{{ service().offers }} itens</span>
+          <i class="fa-solid fa-chevron-right text-gray-300 text-sm"></i>
+        </div>
+      </button>
+
+      <!-- Descrição -->
+      <button type="button" (click)="editDescription()" class="w-full flex items-center justify-between px-4 py-4 active:bg-gray-50">
+        <span class="text-gray-900 font-medium">Descrição</span>
+        <div class="flex items-center gap-2">
+          <span class="text-gray-400 truncate max-w-[150px]">{{ service().description }}</span>
+          <i class="fa-solid fa-chevron-right text-gray-300 text-sm"></i>
+        </div>
+      </button>
+    </div>
+
+    <!-- Agendamento Section -->
+    <div class="px-4 mt-6">
+      <span class="text-xs font-medium text-gray-400 uppercase tracking-wide">Agendamento</span>
+    </div>
+
+    <div class="bg-white rounded-2xl mx-4 mt-2 overflow-hidden shadow-sm">
+      <!-- Atendimento -->
+      <button type="button" (click)="editAttendanceType()" class="w-full flex items-center justify-between px-4 py-4 border-b border-gray-100 active:bg-gray-50">
+        <span class="text-gray-900 font-medium">Atendimento</span>
+        <div class="flex items-center gap-2">
+          <span class="text-gray-400">{{ service().attendanceType }}</span>
+          <i class="fa-solid fa-chevron-up-down text-gray-300 text-sm"></i>
+        </div>
+      </button>
+
+      <!-- Duração -->
+      <button type="button" (click)="editDuration()" class="w-full flex items-center justify-between px-4 py-4 border-b border-gray-100 active:bg-gray-50">
+        <span class="text-gray-900 font-medium">Duração</span>
+        <span class="text-gray-400">{{ service().duration }}</span>
+      </button>
+
+      <!-- Horários de trabalho -->
+      <button type="button" (click)="editWorkHours()" class="w-full flex items-center justify-between px-4 py-4 border-b border-gray-100 active:bg-gray-50">
+        <span class="text-gray-900 font-medium">Horários de trabalho</span>
+        <div class="flex items-center gap-2">
+          <span class="text-gray-400">Editar</span>
+          <i class="fa-solid fa-chevron-right text-gray-300 text-sm"></i>
+        </div>
+      </button>
+
+      <!-- Observações -->
+      <button type="button" (click)="editObservations()" class="w-full flex items-center justify-between px-4 py-4 border-b border-gray-100 active:bg-gray-50">
+        <span class="text-gray-900 font-medium">Observações</span>
+        <div class="flex items-center gap-2">
+          <span class="text-gray-400">{{ service().observations || 'Preencher' }}</span>
+          <i class="fa-solid fa-chevron-right text-gray-300 text-sm"></i>
+        </div>
+      </button>
+
+      <!-- Antecedência -->
+      <button type="button" (click)="editAdvanceTime()" class="w-full flex items-center justify-between px-4 py-4 active:bg-gray-50">
+        <span class="text-gray-900 font-medium">Antecedência</span>
+        <div class="flex items-center gap-2">
+          <span class="text-gray-400">{{ service().advanceTime }}</span>
+          <i class="fa-solid fa-chevron-up-down text-gray-300 text-sm"></i>
+        </div>
+      </button>
+    </div>
+
+    <p class="text-sm text-gray-400 px-4 mt-3">
+      Defina com quanto tempo de antecedência os clientes podem agendar.
+    </p>
+
+    <!-- Pagamento Section -->
+    <div class="px-4 mt-6">
+      <span class="text-xs font-medium text-gray-400 uppercase tracking-wide">Pagamento</span>
+    </div>
+
+    <div class="bg-white rounded-2xl mx-4 mt-2 overflow-hidden shadow-sm">
+      <!-- Valor -->
+      <button type="button" (click)="editPrice()" class="w-full flex items-center justify-between px-4 py-4 active:bg-gray-50">
+        <span class="text-gray-900 font-medium">Valor</span>
+        <div class="flex items-center gap-2">
+          <span class="text-gray-400">{{ formatCurrency(service().price) }}</span>
+          <i class="fa-solid fa-chevron-right text-gray-300 text-sm"></i>
+        </div>
+      </button>
+    </div>
+
+    <p class="text-sm text-gray-400 px-4 mt-3">
+      A taxa da Pump é descontada no momento que o cliente contratar esse serviço.
+    </p>
+
+    <!-- Disponível para venda Section -->
+    <div class="bg-white rounded-2xl mx-4 mt-4 overflow-hidden shadow-sm">
+      <div class="flex items-center justify-between px-4 py-4">
+        <span class="text-gray-900 font-medium">Disponível para venda</span>
+        <ion-toggle
+          [checked]="availableForSale()"
+          (ionChange)="toggleAvailableForSale()"
+          mode="ios"
+          style="--track-background: #d1d5db; --track-background-checked: #fdba74; --handle-background: white; --handle-background-checked: white;"
+        ></ion-toggle>
+      </div>
+    </div>
+
+    <p class="text-sm text-gray-400 px-4 mt-3 pb-24">
+      Marque essa opção para indicar que seu serviço está pronto para aparecer na busca e aceitar contratações. Você pode alterar essa opção quando quiser.
+    </p>
+  </div>
+</ion-content>

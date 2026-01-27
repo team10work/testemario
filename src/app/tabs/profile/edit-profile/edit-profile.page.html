@@ -1,0 +1,107 @@
+<ion-content
+  fullscreen
+  forceOverscroll="false"
+  [scrollY]="true"
+  class="bg-white ion-no-padding"
+>
+  <div class="min-h-full bg-white">
+    <div
+      class="flex items-center justify-between px-4 py-3 bg-white"
+      style="padding-top: calc(env(safe-area-inset-top) + 12px)"
+    >
+      <button
+        type="button"
+        (click)="goBack()"
+        class="w-10 h-10 flex items-center justify-center"
+      >
+        <i class="fa-solid fa-chevron-left text-orange-500 text-lg"></i>
+      </button>
+      <span class="text-base font-medium text-gray-900"
+        >{{ profile().username }}</span
+      >
+      <button
+        type="button"
+        (click)="editProfile()"
+        class="text-orange-500 font-semibold text-base"
+      >
+        Editar
+      </button>
+    </div>
+
+    <div class="bg-[#f8f8f8] py-8">
+      <div class="flex flex-col items-center">
+        <div
+          class="w-28 h-28 rounded-full bg-gray-200 border-4 border-white shadow-lg flex items-center justify-center overflow-hidden mb-4"
+        >
+          @if (profile().photo) {
+          <img
+            [src]="profile().photo"
+            alt="Profile"
+            class="w-full h-full object-cover"
+          />
+          } @else {
+          <i class="fa-solid fa-user text-gray-400 text-4xl"></i>
+          }
+        </div>
+        <h1 class="text-xl font-bold text-gray-900 mb-1">
+          {{ profile().name }}
+        </h1>
+        <p class="text-gray-500">{{ profile().profession }}</p>
+      </div>
+    </div>
+
+    <div class="bg-white border-t border-gray-100 p-5">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">Bio</h2>
+
+      <div class="flex flex-wrap gap-2 mb-4">
+        @for (tag of profile().tags; track tag) {
+        <span
+          class="bg-white border border-gray-300 rounded-full px-4 py-2 text-sm text-gray-700 font-medium"
+        >
+          {{ tag }}
+        </span>
+        }
+      </div>
+
+      <p class="text-gray-500 leading-relaxed">{{ profile().bio }}</p>
+    </div>
+
+    <div class="bg-white border-t border-gray-100 p-5">
+      <h2 class="text-xl font-bold text-gray-900 mb-3">Avaliações</h2>
+      @if (reviews().length === 0) {
+      <p class="text-gray-500">Você ainda não recebeu avaliações.</p>
+      } @else {
+      <div class="space-y-3">
+        @for (review of reviews(); track review.id) {
+        <div class="bg-white rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-2">
+            <i class="fa-solid fa-star text-yellow-500"></i>
+            <span class="font-semibold">{{ review.rating }}</span>
+          </div>
+          <p class="text-gray-600">{{ review.comment }}</p>
+        </div>
+        }
+      </div>
+      }
+    </div>
+
+    <div class="bg-white border-t border-gray-100 p-5 pb-24">
+      <h2 class="text-xl font-bold text-gray-900 mb-3">Educação</h2>
+      @if (education().length === 0) {
+      <p class="text-gray-500">
+        Você ainda não preencheu seu histórico educacional.
+      </p>
+      } @else {
+      <div class="space-y-3">
+        @for (edu of education(); track edu.id) {
+        <div class="bg-white rounded-xl p-4">
+          <h3 class="font-semibold text-gray-900">{{ edu.institution }}</h3>
+          <p class="text-gray-600">{{ edu.course }}</p>
+          <p class="text-gray-400 text-sm">{{ edu.year }}</p>
+        </div>
+        }
+      </div>
+      }
+    </div>
+  </div>
+</ion-content>

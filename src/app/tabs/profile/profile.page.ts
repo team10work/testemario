@@ -1,13 +1,10 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { IonContent } from '@ionic/angular/standalone';
+import { NavController } from '@ionic/angular';
+import { Service } from '../../shared/interfaces/service';
 
-interface Service {
-  id: string;
-  name: string;
-  type: 'remote' | 'presential';
-  price: number;
-}
 
 @Component({
   selector: 'app-profile',
@@ -19,7 +16,7 @@ export class ProfilePage {
   readonly showBalance = signal(true);
   readonly balance = signal(0);
   readonly pendingBalance = signal(0);
-  
+
   readonly profile = signal({
     name: 'Mário Coxe',
     profession: 'Software Developer and Devops',
@@ -32,7 +29,23 @@ export class ProfilePage {
   readonly rating = signal<number | null>(null);
   readonly reviewCount = signal(0);
 
-  constructor() {}
+  constructor(
+    private router: Router,
+    private navCtrl: NavController,
+  ) {}
+
+  goToBalance(): void {
+    console.log('Navigating to balance page');
+    this.navCtrl.navigateForward('/balance');
+  }
+
+  goToEditProfile(): void {
+    this.navCtrl.navigateForward('/edit-profile');
+  }
+
+  goToEditService(serviceId: string): void {
+    this.navCtrl.navigateForward(`/edit-service/${serviceId}`);
+  }
 
   toggleBalance(): void {
     this.showBalance.update((v) => !v);

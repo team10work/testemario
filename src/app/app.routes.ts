@@ -53,5 +53,20 @@ export const routes: Routes = [
     ],
   },
 
+  {
+    path: 'balance',
+    loadComponent: () => import('./tabs/profile/balance/balance.page').then(m => m.BalancePage),
+  },
+
+  {
+    path: 'edit-profile',
+    loadComponent: () => import('./tabs/profile/edit-profile/edit-profile.page').then(m => m.EditProfilePage),
+  },
+
+  {
+    path: 'edit-service/:id',
+    loadComponent: () => import('./tabs/profile/edit-service/edit-service.page').then(m => m.EditServicePage),
+  },
+
   { path: '**', redirectTo: 'auth/login' },
 ];
