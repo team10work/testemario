@@ -76,6 +76,27 @@ export const routes: Routes = [
                 (m) => m.EditServicePage,
               ),
           },
+          {
+            path: 'services',
+            loadComponent: () =>
+              import('./tabs/profile/services/services.page').then(
+                (m) => m.ServicesPage,
+              ),
+          },
+          {
+            path: 'attendances',
+            loadComponent: () =>
+              import('./tabs/profile/attendances/attendances.page').then(
+                (m) => m.AttendancesPage,
+              ),
+          },
+          {
+            path: 'subscriptions',
+            loadComponent: () =>
+              import('./tabs/profile/subscriptions/subscriptions.page').then(
+                (m) => m.SubscriptionsPage,
+              ),
+          },
         ],
       },
       { path: '', redirectTo: 'search', pathMatch: 'full' },

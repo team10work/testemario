@@ -1,0 +1,100 @@
+<ion-content
+  fullscreen
+  forceOverscroll="false"
+  [scrollY]="true"
+  class="bg-[#f7f7f8] ion-no-padding"
+>
+  <div
+    class="max-w-xl mx-auto px-4 pt-6 pb-24"
+    style="padding-top: calc(env(safe-area-inset-top) + 12px)"
+  >
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+      <button
+        type="button"
+        (click)="goBack()"
+        class="w-10 h-10 flex items-center justify-center"
+      >
+        <i class="fa-solid fa-chevron-left text-orange-500 text-xl"></i>
+      </button>
+
+      <h1 class="text-lg font-semibold text-gray-900">Serviços</h1>
+
+      <button
+        type="button"
+        (click)="addService()"
+        class="w-10 h-10 flex items-center justify-center"
+      >
+        <i class="fa-solid fa-plus text-orange-500 text-xl"></i>
+      </button>
+    </div>
+
+    <!-- Services List -->
+    <div class="space-y-4">
+      @for (service of services(); track service.id) {
+      <div
+        role="button"
+        tabindex="0"
+        (click)="goToEditService(service.id)"
+        (keydown.enter)="goToEditService(service.id)"
+        class="bg-white rounded-2xl p-4 cursor-pointer active:bg-gray-50 transition-colors"
+      >
+        <!-- Header row -->
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-2">
+            <div
+              class="w-7 h-7 rounded-full bg-cyan-50 flex items-center justify-center"
+            >
+              <i class="fa-solid fa-location-arrow text-cyan-700 text-xs"></i>
+            </div>
+            <span class="text-sm font-medium text-cyan-700">Atendimento</span>
+          </div>
+
+          <button
+            type="button"
+            (click)="openServiceOptions(service, $event)"
+            class="w-8 h-8 flex items-center justify-center"
+          >
+            <i class="fa-solid fa-ellipsis text-gray-400 text-lg"></i>
+          </button>
+        </div>
+
+        <!-- Service name -->
+        <h2 class="text-xl font-bold text-gray-900 mb-2">{{ service.name }}</h2>
+
+        <!-- Category tag -->
+        <div class="mb-3">
+          <span
+            class="inline-block bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-full"
+          >
+            {{ service.category }}
+          </span>
+        </div>
+
+        <!-- Service details -->
+        <div class="space-y-2 mb-3">
+          <div class="flex items-center gap-2 text-gray-600 text-sm">
+            <i class="fa-regular fa-calendar text-gray-400 w-4"></i>
+            <span>{{ service.scheduleType }}</span>
+          </div>
+
+          <div class="flex items-center gap-2 text-gray-600 text-sm">
+            <i class="fa-regular fa-clock text-gray-400 w-4"></i>
+            <span>{{ service.duration }}</span>
+          </div>
+
+          <div class="flex items-center gap-2 text-gray-600 text-sm">
+            <i class="fa-solid fa-tv text-gray-400 w-4 text-xs"></i>
+            <span>{{ service.type === 'remote' ? 'Remoto' : 'Presencial' }}</span>
+          </div>
+        </div>
+
+        <!-- Price -->
+        <div class="text-xl font-bold text-gray-900">
+          {{ formatCurrency(service.price) }}
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</ion-content>

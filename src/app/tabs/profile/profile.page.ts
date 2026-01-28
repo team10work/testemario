@@ -47,6 +47,21 @@ export class ProfilePage {
     this.navCtrl.navigateForward(`/tabs/profile/edit-service/${serviceId}`);
   }
 
+  goToServices(): void {
+    this.navCtrl.navigateForward('/tabs/profile/services');
+  }
+
+  goToAttendances(): void {
+    this.navCtrl.navigateForward('/tabs/profile/attendances');
+  }
+
+  goToSubscriptions(): void {
+    this.navCtrl.navigateForward('/tabs/profile/subscriptions');
+  }
+
+
+
+
   toggleBalance(): void {
     this.showBalance.update((v) => !v);
   }
