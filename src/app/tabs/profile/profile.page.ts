@@ -36,15 +36,15 @@ export class ProfilePage {
 
   goToBalance(): void {
     console.log('Navigating to balance page');
-    this.navCtrl.navigateForward('/balance');
+    this.navCtrl.navigateForward('/tabs/profile/balance');
   }
 
   goToEditProfile(): void {
-    this.navCtrl.navigateForward('/edit-profile');
+    this.navCtrl.navigateForward('/tabs/profile/edit-profile');
   }
 
   goToEditService(serviceId: string): void {
-    this.navCtrl.navigateForward(`/edit-service/${serviceId}`);
+    this.navCtrl.navigateForward(`/tabs/profile/edit-service/${serviceId}`);
   }
 
   toggleBalance(): void {
